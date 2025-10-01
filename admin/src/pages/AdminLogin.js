@@ -19,11 +19,11 @@ const AdminLogin = () => {
     setError('');
 
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+      const res = await axios.post('https://goalfield.onrender.com/api/auth/login', { email, password });
       localStorage.setItem('token', res.data.token);
       
       // Verify admin role
-      const userRes = await axios.get('http://localhost:5000/api/users/me', {
+      const userRes = await axios.get('https://goalfield.onrender.com/api/users/me', {
         headers: { Authorization: `Bearer ${res.data.token}` },
       });
       
@@ -133,7 +133,7 @@ const AdminLogin = () => {
 
             {/* Google Login */}
             <a 
-              href="http://localhost:5000/api/auth/google"
+              href="https://goalfield.onrender.com/api/auth/google"
               className="flex items-center justify-center w-full h-12 border-2 border-gray-300 hover:border-gray-800 rounded-xl font-semibold text-gray-700 hover:text-gray-900 transition-all hover:shadow-md"
             >
               <Chrome className="w-5 h-5 mr-2" />

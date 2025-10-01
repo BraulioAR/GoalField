@@ -34,10 +34,10 @@ const Profile = () => {
     const fetchProfile = async () => {
       try {
         const [userRes, bookingsRes] = await Promise.all([
-          axios.get('http://localhost:5000/api/users/me', {
+          axios.get('https://goalfield.onrender.com/api/users/me', {
             headers: { Authorization: `Bearer ${token}` },
           }),
-          axios.get('http://localhost:5000/api/bookings', {
+          axios.get('https://goalfield.onrender.com/api/bookings', {
             headers: { Authorization: `Bearer ${token}` },
           }),
         ]);
@@ -68,7 +68,7 @@ const Profile = () => {
       const updates = {};
       if (form.name) updates.name = form.name;
       if (form.password) updates.password = form.password;
-      const res = await axios.put('http://localhost:5000/api/users/me', updates, {
+      const res = await axios.put('https://goalfield.onrender.com/api/users/me', updates, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUser(res.data);

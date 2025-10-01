@@ -25,11 +25,11 @@ const Dashboard = () => {
       try {
         const token = localStorage.getItem('token');
         const [usersRes, servicesRes, bookingsRes] = await Promise.all([
-          axios.get('http://localhost:5000/api/users', {
+          axios.get('https://goalfield.onrender.com/api/users', {
             headers: { Authorization: `Bearer ${token}` },
           }),
-          axios.get('http://localhost:5000/api/services'),
-          axios.get('http://localhost:5000/api/bookings', {
+          axios.get('https://goalfield.onrender.com/api/services'),
+          axios.get('https://goalfield.onrender.com/api/bookings', {
             headers: { Authorization: `Bearer ${token}` },
           }),
         ]);
@@ -57,7 +57,7 @@ const Dashboard = () => {
     try {
       const token = localStorage.getItem('token');
       const res = await axios.put(
-        `http://localhost:5000/api/bookings/${bookingId}`,
+        `https://goalfield.onrender.com/api/bookings/${bookingId}`,
         { status },
         { headers: { Authorization: `Bearer ${token}` } }
       );

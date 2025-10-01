@@ -45,7 +45,7 @@ const ServiceCRUD = () => {
 
   const fetchServices = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/services');
+      const res = await axios.get('https://goalfield.onrender.com/api/services');
       setServices(res.data);
       setFilteredServices(res.data);
     } catch (err) {
@@ -100,7 +100,7 @@ const ServiceCRUD = () => {
       }
 
       if (editingId) {
-        await axios.put(`http://localhost:5000/api/services/${editingId}`, formData, {
+        await axios.put(`https://goalfield.onrender.com/api/services/${editingId}`, formData, {
           headers: { 
             Authorization: `Bearer ${token}`,
             'Content-Type': 'multipart/form-data'
@@ -109,7 +109,7 @@ const ServiceCRUD = () => {
         setSuccess('¡Cancha actualizada exitosamente!');
         setEditingId(null);
       } else {
-        await axios.post('http://localhost:5000/api/services', formData, {
+        await axios.post('https://goalfield.onrender.com/api/services', formData, {
           headers: { 
             Authorization: `Bearer ${token}`,
             'Content-Type': 'multipart/form-data'
@@ -156,7 +156,7 @@ const ServiceCRUD = () => {
 
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:5000/api/services/${id}`, {
+      await axios.delete(`https://goalfield.onrender.com/api/services/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setSuccess('¡Cancha eliminada exitosamente!');

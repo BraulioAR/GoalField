@@ -14,7 +14,7 @@ const Home = () => {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/services');
+        const res = await axios.get('https://goalfield.onrender.com/api/services');
         setServices(res.data);
       } catch (err) {
         setError('Failed to load services');

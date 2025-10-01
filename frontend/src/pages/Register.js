@@ -20,7 +20,7 @@ const Register = () => {
     setError('');
 
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/register', {
+      const res = await axios.post('https://goalfield.onrender.com/api/auth/register', {
         name,
         email,
         password,
@@ -156,7 +156,7 @@ const Register = () => {
 
             {/* Google Register */}
             <a 
-              href="http://localhost:5000/api/auth/google"
+              href="https://goalfield.onrender.com/api/auth/google"
               className="flex items-center justify-center w-full h-12 border-2 border-gray-300 hover:border-green-500 rounded-xl font-semibold text-gray-700 hover:text-green-600 transition-all hover:shadow-md"
             >
               <Chrome className="w-5 h-5 mr-2" />

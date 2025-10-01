@@ -17,7 +17,7 @@ const Booking = () => {
   useEffect(() => {
     const fetchService = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/services/${serviceId}`);
+        const res = await axios.get(`https://goalfield.onrender.com/api/services/${serviceId}`);
         setService(res.data);
       } catch (err) {
         setError('No se pudo cargar la información de la cancha');
@@ -36,7 +36,7 @@ const Booking = () => {
     try {
       const token = localStorage.getItem('token');
       await axios.post(
-        'http://localhost:5000/api/bookings',
+        'https://goalfield.onrender.com/api/bookings',
         { service: serviceId, dateTime },
         { headers: { Authorization: `Bearer ${token}` } }
       );
