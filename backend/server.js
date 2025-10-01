@@ -16,11 +16,15 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true,
   },
 });
-app.use(cors({ origin: ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002'], credentials: true }));
+app.use(cors({ 
+  origin: ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002'], 
+  credentials: true,
+  optionsSuccessStatus: 200 // Para compatibilidad con navegadores antiguos
+}));
 app.use(express.json());
 
 passport.use(

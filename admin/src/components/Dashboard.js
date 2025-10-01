@@ -3,13 +3,24 @@ import axios from 'axios';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Users, Calendar, Trophy, TrendingUp, Clock, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 
+/**
+ * Admin Dashboard Component
+ * @description Displays key statistics (users, services, bookings) and recent bookings
+ * @returns {JSX.Element} Dashboard UI with cards and recent bookings list
+ */
 const Dashboard = () => {
+  // State management for dashboard data
   const [stats, setStats] = useState({ users: 0, services: 0, bookings: 0 });
   const [bookings, setBookings] = useState([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    /**
+     * Fetch dashboard statistics and recent bookings
+     * @description Parallel API calls to get users, services, and bookings
+     * @async
+     */
     const fetchStats = async () => {
       try {
         const token = localStorage.getItem('token');
@@ -37,6 +48,31 @@ const Dashboard = () => {
     fetchStats();
   }, []);
 
+  /**
+   * Update booking status (admin action)
+   * @param {string} bookingId
+   * @param {string} status ('confirmed' | 'cancelled')
+   */
+  const handleStatusChange = async (bookingId, status) => {
+    try {
+      const token = localStorage.getItem('token');
+      const res = await axios.put(
+        `http://localhost:5000/api/bookings/${bookingId}`,
+        { status },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setBookings((prev) =>
+        prev.map((b) => (b._id === bookingId ? res.data : b))
+      );
+    } catch (err) {
+      console.error('Error updating booking:', err);
+      setError('No se pudo actualizar la reserva');
+    }
+  };
+
+  /**
+   * Get CSS classes for status badge based on booking status
+   */
   const getStatusColor = (status) => {
     switch (status) {
       case 'confirmed': return 'bg-green-100 text-green-700 border-green-200';
@@ -46,6 +82,9 @@ const Dashboard = () => {
     }
   };
 
+  /**
+   * Get icon component for booking status
+   */
   const getStatusIcon = (status) => {
     switch (status) {
       case 'confirmed': return <CheckCircle className="w-4 h-4" />;
@@ -55,6 +94,7 @@ const Dashboard = () => {
     }
   };
 
+  // Loading state with skeleton animation
   if (loading) {
     return (
       <div className="container mx-auto px-6 py-8">
@@ -82,7 +122,7 @@ const Dashboard = () => {
         </div>
       )}
 
-      {/* Cards de Estadísticas */}
+       {/* Cards de Estadísticas */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         {/* Total Users */}
         <Card className="border-0 shadow-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white overflow-hidden animate-slide-up hover:scale-105 transition-transform">
@@ -166,7 +206,7 @@ const Dashboard = () => {
                 >
                   <div className="flex-1">
                     <div className="flex items-center space-x-3 mb-1">
-                      <h4 className="font-semibold text-gray-900">{booking.service.name}</h4>
+                      <h4 className="font-semibold text-gray-900">{booking.service?.name || 'Unknown Service'}</h4>
                       <span className={`flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-semibold border ${getStatusColor(booking.status)}`}>
                         {getStatusIcon(booking.status)}
                         <span className="capitalize">{booking.status}</span>
@@ -175,7 +215,7 @@ const Dashboard = () => {
                     <div className="flex items-center space-x-4 text-sm text-gray-600">
                       <span className="flex items-center space-x-1">
                         <Users className="w-4 h-4" />
-                        <span>{booking.user.name}</span>
+                        <span>{booking.user?.name || 'Unknown User'}</span>
                       </span>
                       <span className="flex items-center space-x-1">
                         <Clock className="w-4 h-4" />
@@ -186,6 +226,25 @@ const Dashboard = () => {
                       </span>
                     </div>
                   </div>
+                  {/* Admin actions */}
+                  <div className="flex space-x-2">
+                    {booking.status !== 'confirmed' && (
+                      <button
+                        onClick={() => handleStatusChange(booking._id, 'confirmed')}
+                        className="px-3 py-1 text-xs bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
+                      >
+                        Confirmar
+                      </button>
+                    )}
+                    {booking.status !== 'cancelled' && (
+                      <button
+                        onClick={() => handleStatusChange(booking._id, 'cancelled')}
+                        className="px-3 py-1 text-xs bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+                      >
+                        Cancelar
+                      </button>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>
@@ -193,6 +252,7 @@ const Dashboard = () => {
         </CardContent>
       </Card>
 
+      {/* Animaciones */}
       <style>{`
         @keyframes fade-in {
           from { opacity: 0; transform: translateY(-20px); }

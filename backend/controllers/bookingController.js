@@ -53,14 +53,28 @@ exports.updateBooking = async (req, res) => {
   }
 
   try {
-    const booking = await Booking.findOneAndUpdate(
-      { _id: req.params.id, user: req.user._id },
-      { $set: req.body },
-      { new: true, runValidators: true }
-    ).populate('service');
+    let booking;
+
+    if (req.user.role === 'admin') {
+      // Admins can update any booking
+      booking = await Booking.findByIdAndUpdate(
+        req.params.id,
+        { $set: req.body },
+        { new: true, runValidators: true }
+      ).populate('service user');
+    } else {
+      // Regular users can only update their own bookings
+      booking = await Booking.findOneAndUpdate(
+        { _id: req.params.id, user: req.user._id },
+        { $set: req.body },
+        { new: true, runValidators: true }
+      ).populate('service');
+    }
+
     if (!booking) {
       return res.status(404).json({ message: 'Booking not found or not authorized' });
     }
+
     if (io) {
       io.emit('updateBooking', booking);
     } else {

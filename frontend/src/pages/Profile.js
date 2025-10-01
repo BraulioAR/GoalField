@@ -6,6 +6,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { Input } from '../components/ui/input';
 import { User, Mail, Shield, Calendar, Clock, CheckCircle, XCircle, LogOut, Edit } from 'lucide-react';
 
+/**
+ * User Profile Component
+ * @description Displays user profile information, booking history, and allows profile updates
+ * @returns {JSX.Element} Profile UI with user details, update form, and bookings list
+ */
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [bookings, setBookings] = useState([]);
@@ -15,6 +20,11 @@ const Profile = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    /**
+     * Check authentication and fetch user profile and bookings
+     * @description Redirects to login if no token, otherwise fetches user data and bookings
+     * @async
+     */
     const token = localStorage.getItem('token');
     if (!token) {
       navigate('/login');
@@ -45,6 +55,12 @@ const Profile = () => {
     fetchProfile();
   }, [navigate]);
 
+  /**
+   * Handle profile update form submission
+   * @param {React.FormEvent} e - Form submit event
+   * @description Updates user name and/or password via API call
+   * @async
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -65,11 +81,20 @@ const Profile = () => {
     }
   };
 
+  /**
+   * Handle user logout
+   * @description Clears token from localStorage and redirects to login
+   */
   const handleLogout = () => {
     localStorage.removeItem('token');
     navigate('/login');
   };
 
+  /**
+   * Get CSS classes for booking status badge
+   * @param {string} status - Booking status ('confirmed', 'pending', 'cancelled')
+   * @returns {string} Tailwind CSS classes for the status badge
+   */
   const getStatusColor = (status) => {
     switch (status) {
       case 'confirmed': return 'text-green-600 bg-green-50';
@@ -79,6 +104,11 @@ const Profile = () => {
     }
   };
 
+  /**
+   * Get icon component for booking status
+   * @param {string} status - Booking status ('confirmed', 'pending', 'cancelled')
+   * @returns {JSX.Element} Lucide icon for the status
+   */
   const getStatusIcon = (status) => {
     switch (status) {
       case 'confirmed': return <CheckCircle className="w-4 h-4" />;
@@ -238,7 +268,7 @@ const Profile = () => {
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex-1">
                           <h3 className="font-bold text-lg text-gray-900 mb-1">
-                            {booking.service.name}
+                            {booking.service?.name || 'Unknown Service'}
                           </h3>
                           <div className="flex items-center space-x-2 text-gray-600 text-sm">
                             <Clock className="w-4 h-4" />
